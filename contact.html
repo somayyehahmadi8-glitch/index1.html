@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us — APNA STORE</title>
+<meta name="description" content="Contact the APNA STORE support team — we reply within 24 hours.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230757C8'/><text x='16' y='23' font-size='17' font-weight='900' text-anchor='middle' fill='white' font-family='Arial'>A</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="contact">
+<div id="chromeHeader"></div>
+<div class="page-hero"><div class="container"><h1>Contact Us</h1><div class="crumbs"><a href="index.html">Home</a> / Contact</div></div></div>
+<section class="section"><div class="container">
+  <div class="checkout-layout" style="padding:0">
+    <div class="admin-card">
+      <h3>Send us a message</h3>
+      <form id="contactForm" novalidate>
+        <div class="form-grid">
+          <div class="field"><label>Your Name *</label><input id="ctName"><span class="err">Required</span></div>
+          <div class="field"><label>Email *</label><input id="ctEmail" type="email"><span class="err">Enter a valid email</span></div>
+          <div class="field full"><label>Subject</label><input id="ctSubject" placeholder="Order question, feedback..."></div>
+          <div class="field full"><label>Message *</label><textarea id="ctMsg" rows="5"></textarea><span class="err">Please write a message</span></div>
+        </div>
+        <button class="btn btn-primary" type="submit">SEND MESSAGE</button>
+      </form>
+    </div>
+    <div>
+      <div class="metric" style="margin-bottom:14px"><div class="m-lbl">SUPPORT HOURS</div><div class="m-num" style="font-size:19px">24 / 7</div></div>
+      <div class="sum-row"><span>✉️ Email</span><b>support@apnastore.com</b></div>
+      <div class="sum-row"><span>📞 Phone</span><b>+1 (800) 555-0199</b></div>
+      <div class="sum-row"><span>💬 Live chat</span><b>Bottom-right of any page</b></div>
+      <div class="sum-row"><span>🏢 Address</span><b style="text-align:right">100 Commerce Ave, Springfield, IL</b></div>
+      <div class="secure-note">We typically reply within 24 hours on business days.</div>
+    </div>
+  </div>
+</div></section>
+<div id="chromeFooter"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/pages.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  $("#contactForm").onsubmit = e => {
+    e.preventDefault();
+    let ok = true;
+    const mark = (id, bad) => { $("#" + id).closest(".field").classList.toggle("invalid", bad); if (bad) ok = false; };
+    mark("ctName", !$("#ctName").value.trim());
+    mark("ctEmail", !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($("#ctEmail").value.trim()));
+    mark("ctMsg", $("#ctMsg").value.trim().length < 5);
+    if (!ok) { toast("Please fix the highlighted fields.", "error"); return; }
+    e.target.reset();
+    toast("Message sent — we'll reply within 24 hours.", "success");
+  };
+});
+</script>
+</body>
+</html>
