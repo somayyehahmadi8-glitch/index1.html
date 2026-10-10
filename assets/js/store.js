@@ -62,15 +62,15 @@ const Store = (() => {
   if (!orders) {
     orders = [
       { id: "APN-10234", user: "guest@apnastore.com", name: "Alex Morgan",
-        items: [{ id: 13, qty: 1, color: "Midnight", size: "One size" }, { id: 5, qty: 1, color: "White/Blue", size: "42" }],
+        items: [{ id: 13, qty: 1, color: "شبانه", size: "تک‌سایز" }, { id: 5, qty: 1, color: "سفید/آبی", size: "42" }],
         subtotal: 169.98, discount: 0, shipping: 0, tax: 13.6, total: 183.58, paymentMethod: "Credit/Debit Card",
         shippingMethod: "Express", status: "Shipped", createdAt: "2026-10-04", address: "221B Market Street, Springfield, IL 62704, USA" },
       { id: "APN-10235", user: "guest@apnastore.com", name: "Alex Morgan",
-        items: [{ id: 1, qty: 2, color: "Navy", size: "L" }],
+        items: [{ id: 1, qty: 2, color: "سرمه‌ای", size: "L" }],
         subtotal: 79.98, discount: 8, shipping: 0, tax: 5.76, total: 77.74, paymentMethod: "PayPal",
         shippingMethod: "Standard", status: "Delivered", createdAt: "2026-09-21", address: "221B Market Street, Springfield, IL 62704, USA" },
       { id: "APN-10236", user: "guest@apnastore.com", name: "Alex Morgan",
-        items: [{ id: 9, qty: 1, color: "Classic", size: "Set" }],
+        items: [{ id: 9, qty: 1, color: "کلاسیک", size: "ست" }],
         subtotal: 44.99, discount: 0, shipping: 5.99, tax: 3.6, total: 54.58, paymentMethod: "Cash on Delivery",
         shippingMethod: "Standard", status: "Processing", createdAt: "2026-10-07", address: "221B Market Street, Springfield, IL 62704, USA" },
     ];
@@ -95,7 +95,7 @@ const Store = (() => {
   };
   const register = data => {
     const list = users();
-    if (list.some(u => u.email.toLowerCase() === data.email.toLowerCase())) return { error: "An account with this email already exists." };
+    if (list.some(u => u.email.toLowerCase() === data.email.toLowerCase())) return { error: "با این ایمیل قبلاً حساب کاربری ساخته شده است." };
     list.push(data); saveUsers(list);
     user = { name: data.name, email: data.email, phone: data.phone, address: data.address };
     write("apna_user", user); return { ok: true };
@@ -120,6 +120,6 @@ const Store = (() => {
     settings, saveSettings };
 })();
 
-/* money formatter */
-const money = n => "$" + Number(n).toFixed(2);
+/* قالب‌بندی مبلغ با ارقام فارسی (واحد: تومان) */
+const money = n => faNum(Number(n).toFixed(2)) + " تومان";
 const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));

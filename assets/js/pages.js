@@ -1,4 +1,4 @@
-/* ============ APNA STORE — Page renderers ============ */
+/* ============ APNA STORE — Page renderers (فارسی) ============ */
 document.body.classList.add("page-enter");
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -20,13 +20,13 @@ function renderHome() {
       <div class="cat-art" style="background:${gradCss(c.grad)}">${c.icon}</div>
       <div class="cat-body">
         <div class="cat-ico">${c.icon}</div>
-        <div class="cat-name">${c.name.toUpperCase()}</div>
-        <div class="cat-count">${P.filter(p => p.category === c.id).length} products</div>
-        <span class="cat-shop">SHOP NOW →</span>
+        <div class="cat-name">${c.name}</div>
+        <div class="cat-count">${faNum(P.filter(p => p.category === c.id).length)} محصول</div>
+        <span class="cat-shop">خرید کنید ←</span>
       </div>
     </a>`).join("");
   // featured tabs
-  const tabs = [["all", "All"], ...CATEGORIES.slice(0, 5).map(c => [c.id, c.name])];
+  const tabs = [["all", "همه"], ...CATEGORIES.slice(0, 5).map(c => [c.id, c.name])];
   $("#featTabs").innerHTML = tabs.map(([id, n], i) => `<button class="tab ${i === 0 ? "active" : ""}" data-tab="${id}">${n}</button>`).join("");
   const renderFeat = cat => {
     const list = (cat === "all" ? P.filter(p => p.featured) : P.filter(p => p.category === cat && p.featured).concat(P.filter(p => p.category === cat && !p.featured))).slice(0, 8);
@@ -40,12 +40,12 @@ function renderHome() {
   const flash = P.filter(p => p.flash);
   $("#flashGrid").innerHTML = flash.map(p => `
     <div class="f-card">
-      <div class="f-media" style="background:${gradCss(catOf(p.category).grad)}">${p.images[0]}<span class="f-off">-${p.discount}%</span></div>
+      <div class="f-media" style="background:${gradCss(catOf(p.category).grad)}">${p.images[0]}<span class="f-off">-${faNum(p.discount)}٪</span></div>
       <div class="f-name">${escapeHtml(p.name)}</div>
       <div class="f-prices"><span class="f-price">${money(Store.effPrice(p))}</span><span class="f-old">${money(p.price)}</span></div>
       <div class="stock-bar"><div class="stock-fill" style="width:${Math.max(8, 100 - p.stock * 2)}%"></div></div>
-      <div class="stock-txt">Only ${p.stock} left</div>
-      <button class="btn btn-primary btn-sm" data-add="${p.id}">Add to Cart</button>
+      <div class="stock-txt">فقط ${faNum(p.stock)} عدد باقی مانده</div>
+      <button class="btn btn-primary btn-sm" data-add="${p.id}">افزودن به سبد</button>
     </div>`).join("");
   // countdown to next midnight
   const tick = () => {
@@ -54,7 +54,7 @@ function renderHome() {
     const d = Math.floor(s / 86400); s %= 86400;
     const h = Math.floor(s / 3600); s %= 3600;
     const m = Math.floor(s / 60); const sec = s % 60;
-    [["cdD", d], ["cdH", h], ["cdM", m], ["cdS", sec]].forEach(([id, v]) => { const el = $("#" + id); if (el) el.textContent = String(v).padStart(2, "0"); });
+    [["cdD", d], ["cdH", h], ["cdM", m], ["cdS", sec]].forEach(([id, v]) => { const el = $("#" + id); if (el) el.textContent = faNum(String(v).padStart(2, "0")); });
   };
   tick(); setInterval(tick, 1000);
   // new arrivals
@@ -62,14 +62,14 @@ function renderHome() {
   // best sellers
   $("#bestRow").innerHTML = P.filter(p => p.bestSeller).sort((a, b) => (a.rank || 9) - (b.rank || 9)).slice(0, 3).map((p, i) => `
     <div class="bs-card reveal">
-      <span class="bs-rank">#${i + 1}</span>
+      <span class="bs-rank">#${faNum(i + 1)}</span>
       <a class="bs-media" style="background:${gradCss(catOf(p.category).grad)}" href="product.html?slug=${p.slug}">${p.images[0]}</a>
       <div style="flex:1">
         <span class="p-cat">${catOf(p.category).name}</span>
         <h3 class="p-name" style="margin:2px 0 4px"><a href="product.html?slug=${p.slug}">${escapeHtml(p.name)}</a></h3>
-        <div class="p-rating">${stars(p.rating)} <span>${p.reviews} reviews</span></div>
+        <div class="p-rating">${stars(p.rating)} <span>${faNum(p.reviews)} نظر</span></div>
         <div class="p-prices"><span class="p-price">${money(Store.effPrice(p))}</span>${p.salePrice ? `<span class="p-old">${money(p.price)}</span>` : ""}</div>
-        <button class="btn btn-primary btn-sm" style="margin-top:10px" data-add="${p.id}">Add to Cart</button>
+        <button class="btn btn-primary btn-sm" style="margin-top:10px" data-add="${p.id}">افزودن به سبد</button>
       </div>
     </div>`).join("");
   // newsletter
@@ -77,9 +77,9 @@ function renderHome() {
   nf.onsubmit = e => {
     e.preventDefault();
     const em = $("#newsEmail"), msg = $("#newsMsg");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value)) { msg.textContent = "Please enter a valid email address."; msg.className = "news-msg bad"; return; }
-    msg.textContent = "You're in! Check your inbox for the 10% discount code."; msg.className = "news-msg ok";
-    em.value = ""; toast("Subscribed — 10% discount unlocked!", "success");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value)) { msg.textContent = "لطفاً یک ایمیل معتبر وارد کنید."; msg.className = "news-msg bad"; return; }
+    msg.textContent = "شما عضو شدید! کد تخفیف ۱۰٪ را در ایمیل خود بررسی کنید."; msg.className = "news-msg ok";
+    em.value = ""; toast("عضویت انجام شد — کد تخفیف ۱۰٪ فعال شد!", "success");
   };
 }
 
@@ -91,10 +91,10 @@ function renderCategories() {
       <div class="cat-art" style="background:${gradCss(c.grad)};height:150px;font-size:64px">${c.icon}</div>
       <div class="cat-body">
         <div class="cat-ico">${c.icon}</div>
-        <div class="cat-name">${c.name.toUpperCase()}</div>
-        <div class="cat-count">${P.filter(p => p.category === c.id).length} products</div>
+        <div class="cat-name">${c.name}</div>
+        <div class="cat-count">${faNum(P.filter(p => p.category === c.id).length)} محصول</div>
         <p style="font-size:12px;color:var(--muted);margin-top:6px">${c.desc}</p>
-        <span class="cat-shop">SHOP NOW →</span>
+        <span class="cat-shop">خرید کنید ←</span>
       </div>
     </a>`).join("");
 }
@@ -108,24 +108,24 @@ function renderShop() {
 
   // sidebar
   $("#filterBox").innerHTML = `
-    <div class="filter-box"><h4>Categories</h4>${CATEGORIES.map(c => `
-      <label class="check-row"><input type="checkbox" data-f="cats" value="${c.id}" ${state.cats.includes(c.id) ? "checked" : ""}> ${c.name} <span class="cnt">${P.filter(p => p.category === c.id).length}</span></label>`).join("")}
+    <div class="filter-box"><h4>دسته‌بندی</h4>${CATEGORIES.map(c => `
+      <label class="check-row"><input type="checkbox" data-f="cats" value="${c.id}" ${state.cats.includes(c.id) ? "checked" : ""}> ${c.name} <span class="cnt">${faNum(P.filter(p => p.category === c.id).length)}</span></label>`).join("")}
     </div>
-    <div class="filter-box"><h4>Price Range</h4>
-      <div class="price-inputs"><input id="fMin" type="number" min="0" placeholder="0" value="0" aria-label="Min price"><span>—</span><input id="fMax" type="number" min="0" placeholder="200" value="200" aria-label="Max price"></div>
-      <button class="btn btn-ghost btn-sm btn-block" id="fPriceApply" style="margin-top:10px">APPLY PRICE</button>
+    <div class="filter-box"><h4>محدوده قیمت</h4>
+      <div class="price-inputs"><input id="fMin" type="number" min="0" placeholder="۰" value="0" aria-label="کمترین قیمت"><span>—</span><input id="fMax" type="number" min="0" placeholder="۲۰۰" value="200" aria-label="بیشترین قیمت"></div>
+      <button class="btn btn-ghost btn-sm btn-block" id="fPriceApply" style="margin-top:10px">اعمال قیمت</button>
     </div>
-    <div class="filter-box"><h4>Brand</h4>${BRANDS.map(b => `<label class="check-row"><input type="checkbox" data-f="brands" value="${b}"> ${b} <span class="cnt">${P.filter(p => p.brand === b).length}</span></label>`).join("")}
+    <div class="filter-box"><h4>برند</h4>${BRANDS.map(b => `<label class="check-row"><input type="checkbox" data-f="brands" value="${b}"> ${b} <span class="cnt">${faNum(P.filter(p => p.brand === b).length)}</span></label>`).join("")}
     </div>
-    <div class="filter-box"><h4>Rating</h4>${[4.5, 4, 3.5].map(r => `<label class="check-row"><input type="radio" name="fRating" data-f="rating" value="${r}"> ${"★".repeat(Math.round(r))} &amp; up</label>`).join("")}
-      <label class="check-row"><input type="radio" name="fRating" data-f="rating" value="0" checked> Any rating</label>
+    <div class="filter-box"><h4>امتیاز</h4>${[4.5, 4, 3.5].map(r => `<label class="check-row"><input type="radio" name="fRating" data-f="rating" value="${r}"> ${"★".repeat(Math.round(r))} و بالاتر</label>`).join("")}
+      <label class="check-row"><input type="radio" name="fRating" data-f="rating" value="0" checked> هر امتیازی</label>
     </div>
-    <div class="filter-box"><h4>Size</h4><div class="chip-row">${SIZES.map(s => `<button class="chip" data-f="sizes" data-v="${s}">${s}</button>`).join("")}</div></div>
-    <div class="filter-box"><h4>Availability &amp; Discount</h4>
-      <label class="check-row"><input type="checkbox" data-f="avail"> In stock only</label>
-      <label class="check-row"><input type="checkbox" data-f="disc"> On sale only</label>
+    <div class="filter-box"><h4>سایز</h4><div class="chip-row">${SIZES.map(s => `<button class="chip" data-f="sizes" data-v="${s}">${s}</button>`).join("")}</div></div>
+    <div class="filter-box"><h4>موجودی و تخفیف</h4>
+      <label class="check-row"><input type="checkbox" data-f="avail"> فقط کالاهای موجود</label>
+      <label class="check-row"><input type="checkbox" data-f="disc"> فقط کالاهای تخفیف‌دار</label>
     </div>
-    <button class="btn btn-outline btn-sm btn-block" id="fClear">CLEAR ALL FILTERS</button>`;
+    <button class="btn btn-outline btn-sm btn-block" id="fClear">حذف همه فیلترها</button>`;
 
   const chipToggle = (sel, arr) => $$(sel).forEach(c => c.onclick = () => {
     const v = c.dataset.v; arr.includes(v) ? arr.splice(arr.indexOf(v), 1) : arr.push(v); c.classList.toggle("active"); apply();
@@ -161,32 +161,32 @@ function renderShop() {
     const sorters = { "price-asc": (a, b) => Store.effPrice(a) - Store.effPrice(b), "price-desc": (a, b) => Store.effPrice(b) - Store.effPrice(a),
       rating: (a, b) => b.rating - a.rating, newest: (a, b) => (b.newArrival === true) - (a.newArrival === true), featured: (a, b) => (b.featured === true) - (a.featured === true) };
     list.sort(sorters[state.sort] || sorters.featured);
-    $("#resultCount").innerHTML = `Showing <b>${list.length}</b> products`;
+    $("#resultCount").innerHTML = `نمایش <b>${faNum(list.length)}</b> محصول`;
     $("#shopGrid").innerHTML = list.length
       ? list.map(p => productCard(p, { listView: state.view === "list" })).join("")
-      : `<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">🔍</div><h3>No products found</h3><p>Try adjusting your filters or browse our categories.</p><a class="btn btn-primary" href="shop.html">RESET FILTERS</a></div>`;
+      : `<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">🔍</div><h3>محصولی یافت نشد</h3><p>فیلترها را تغییر دهید یا از دسته‌بندی‌ها دیدن کنید.</p><a class="btn btn-primary" href="shop.html">حذف فیلترها</a></div>`;
     initReveal();
   }
 
   // heading
-  if (urlFilter === "new") { $("#shopTitle").textContent = "New Arrivals"; }
-  else if (urlFilter === "best") { $("#shopTitle").textContent = "Best Sellers"; }
-  else if (urlFilter === "sale") { $("#shopTitle").textContent = "Flash Deals"; }
-  else if (urlCat) { const c = CATEGORIES.find(c => c.slug === urlCat); $("#shopTitle").textContent = c ? c.name : "Shop"; $("#crumbTrail").innerHTML = `<a href="index.html">Home</a> / <a href="categories.html">Categories</a> / ${c ? c.name : "Shop"}`; }
-  else if (urlQ) { $("#shopTitle").textContent = `Results for “${urlQ}”`; }
-  $("#crumbTrail").innerHTML = $("#crumbTrail").innerHTML || `<a href="index.html">Home</a> / Shop`;
+  if (urlFilter === "new") { $("#shopTitle").textContent = "جدیدترین‌ها"; }
+  else if (urlFilter === "best") { $("#shopTitle").textContent = "پرفروش‌ترین‌ها"; }
+  else if (urlFilter === "sale") { $("#shopTitle").textContent = "تخفیف‌های لحظه‌ای"; }
+  else if (urlCat) { const c = CATEGORIES.find(c => c.slug === urlCat); $("#shopTitle").textContent = c ? c.name : "فروشگاه"; $("#crumbTrail").innerHTML = `<a href="index.html">خانه</a> / <a href="categories.html">دسته‌بندی‌ها</a> / ${c ? c.name : "فروشگاه"}`; }
+  else if (urlQ) { $("#shopTitle").textContent = `نتایج جستجو برای «${urlQ}»`; }
+  $("#crumbTrail").innerHTML = $("#crumbTrail").innerHTML || `<a href="index.html">خانه</a> / فروشگاه`;
   apply();
 }
 
 /* ================= SEARCH PAGE ================= */
 function renderSearch() {
   const q = (param("q") || "").trim();
-  $("#searchQ").textContent = q ? `Search results for “${q}”` : "Search";
-  if (!q) { $("#searchGrid").innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">🔍</div><h3>What are you looking for?</h3><p>Use the search bar above to find products, categories and brands.</p></div>`; return; }
+  $("#searchQ").textContent = q ? `نتایج جستجو برای «${q}»` : "جستجو";
+  if (!q) { $("#searchGrid").innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">🔍</div><h3>به چه چیزی نیاز دارید؟</h3><p>با استفاده از نوار جستجوی بالا، محصولات، دسته‌بندی‌ها و برندها را پیدا کنید.</p></div>`; return; }
   const list = Store.products().filter(p => (p.name + " " + p.brand + " " + p.subcategory + " " + p.description + " " + catOf(p.category).name).toLowerCase().includes(q.toLowerCase()));
   $("#searchGrid").innerHTML = list.length
     ? list.map(p => productCard(p)).join("")
-    : `<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">🔎</div><h3>No products found</h3><p>Try another search or browse our categories.</p><a class="btn btn-primary" href="categories.html">BROWSE CATEGORIES</a></div>`;
+    : `<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">🔎</div><h3>محصولی یافت نشد</h3><p>عبارت دیگری جستجو کنید یا از دسته‌بندی‌ها دیدن کنید.</p><a class="btn btn-primary" href="categories.html">مشاهده دسته‌بندی‌ها</a></div>`;
 }
 
 /* ================= PRODUCT PAGE ================= */
@@ -199,69 +199,69 @@ function renderProduct() {
   $("#pdTop").innerHTML = `
     <div class="pd-layout">
       <div class="pd-gallery">
-        <div class="pd-main" id="pdMain" style="background:${gradCss(cat.grad)}" title="Hover to zoom"><span class="p-emoji">${p.images[0]}</span></div>
+        <div class="pd-main" id="pdMain" style="background:${gradCss(cat.grad)}" title="برای بزرگ‌نمایی نشانگر را نگه دارید"><span class="p-emoji">${p.images[0]}</span></div>
         <div class="pd-thumbs">${p.images.map((e, i) => `<div class="qv-thumb ${i === 0 ? "active" : ""}" data-i="${i}" style="background:${gradCss(cat.grad)}">${e === "chrono" ? "⏱️" : e}</div>`).join("")}</div>
       </div>
       <div class="pd-info">
         <span class="p-cat">${cat.name} · ${escapeHtml(p.subcategory)}</span>
         <h1>${escapeHtml(p.name)}</h1>
-        <div class="pd-meta">${stars(p.rating)} <span style="color:var(--muted)">${p.rating} · ${p.reviews} reviews</span> <span>·</span> <span>SKU: ${p.sku}</span></div>
+        <div class="pd-meta">${stars(p.rating)} <span style="color:var(--muted)">${faNum(p.rating)} · ${faNum(p.reviews)} نظر</span> <span>·</span> <span>کد کالا: ${p.sku}</span></div>
         <div class="pd-price-row">
           <span class="pd-price">${money(Store.effPrice(p))}</span>
-          ${p.salePrice ? `<span class="pd-old">${money(p.price)}</span><span class="pd-save">SAVE ${p.discount}%</span>` : ""}
+          ${p.salePrice ? `<span class="pd-old">${money(p.price)}</span><span class="pd-save">${faNum(p.discount)}٪ تخفیف</span>` : ""}
         </div>
-        <div class="${p.stock < 20 ? "stock-low" : "stock-ok"}" style="font-size:13.5px;font-weight:700;margin-bottom:10px">${p.stock < 20 ? `Hurry — only ${p.stock} left in stock` : "✓ In stock and ready to ship"}</div>
+        <div class="${p.stock < 20 ? "stock-low" : "stock-ok"}" style="font-size:13.5px;font-weight:700;margin-bottom:10px">${p.stock < 20 ? `عجله کنید — فقط ${faNum(p.stock)} عدد در انبار باقی مانده` : "✓ موجود و آماده ارسال"}</div>
         <p class="pd-desc">${p.description}</p>
-        <div class="opt-lbl">COLOR — <span id="pdColorName">${color}</span></div>
+        <div class="opt-lbl">رنگ — <span id="pdColorName">${color}</span></div>
         <div class="chip-row" id="pdColors">${p.colors.map((c, i) => `<button class="chip ${i === 0 ? "active" : ""}" data-v="${c}">${c}</button>`).join("")}</div>
-        <div class="opt-lbl">SIZE — <span id="pdSizeName">${size}</span></div>
+        <div class="opt-lbl">سایز — <span id="pdSizeName">${size}</span></div>
         <div class="chip-row" id="pdSizes">${p.sizes.map((s, i) => `<button class="chip ${i === 0 ? "active" : ""}" data-v="${s}">${s}</button>`).join("")}</div>
-        <div class="qty-row"><span class="opt-lbl" style="margin:0">QUANTITY</span>
-          <div class="qty-ctl"><button id="pdMinus">−</button><input id="pdQty" value="1" readonly aria-label="Quantity"><button id="pdPlus">+</button></div></div>
+        <div class="qty-row"><span class="opt-lbl" style="margin:0">تعداد</span>
+          <div class="qty-ctl"><button id="pdMinus">−</button><input id="pdQty" value="۱" readonly aria-label="تعداد"><button id="pdPlus">+</button></div></div>
         <div class="pd-actions">
-          <button class="btn btn-primary" id="pdAdd">ADD TO CART</button>
-          <button class="btn btn-navy" id="pdBuy">BUY NOW</button>
-          <button class="icon-btn" id="pdWish" style="border:1.5px solid var(--border)" aria-label="Wishlist"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 21C7 16.6 3 13.3 3 9.2 3 6.3 5.2 4 8 4c1.6 0 3.1.8 4 2 .9-1.2 2.4-2 4-2 2.8 0 5 2.3 5 5.2 0 4.1-4 7.4-9 11.8z" fill="${inWish() ? "#E02D3C" : "none"}" stroke="${inWish() ? "#E02D3C" : "currentColor"}"/></svg></button>
+          <button class="btn btn-primary" id="pdAdd">افزودن به سبد</button>
+          <button class="btn btn-navy" id="pdBuy">خرید فوری</button>
+          <button class="icon-btn" id="pdWish" style="border:1.5px solid var(--border)" aria-label="علاقه‌مندی‌ها"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 21C7 16.6 3 13.3 3 9.2 3 6.3 5.2 4 8 4c1.6 0 3.1.8 4 2 .9-1.2 2.4-2 4-2 2.8 0 5 2.3 5 5.2 0 4.1-4 7.4-9 11.8z" fill="${inWish() ? "#E02D3C" : "none"}" stroke="${inWish() ? "#E02D3C" : "currentColor"}"/></svg></button>
         </div>
         <div class="pd-trust">
-          <span>🚚 Free shipping over $50</span><span>↩️ 30-day returns</span><span>🔒 Secure checkout</span><span>🏷️ 2-year warranty</span>
+          <span>🚚 ارسال رایگان بالای ۵۰ تومان</span><span>↩️ ۳۰ روز مهلت بازگشت</span><span>🔒 پرداخت امن</span><span>🏷️ ۲ سال گارانتی</span>
         </div>
       </div>
     </div>
     <div class="tabs-line">
-      <button class="active" data-t="desc">Description</button><button data-t="spec">Specifications</button>
-      <button data-t="rev">Reviews (${p.reviews})</button><button data-t="ship">Shipping &amp; Returns</button>
+      <button class="active" data-t="desc">توضیحات</button><button data-t="spec">مشخصات</button>
+      <button data-t="rev">نظرات (${faNum(p.reviews)})</button><button data-t="ship">ارسال و بازگشت</button>
     </div>
     <div class="tab-panel" id="pdPanel"></div>
     <section class="section">
-      <div class="section-head"><span class="eyebrow">Keep Exploring</span><h2>YOU MAY ALSO LIKE</h2></div>
+      <div class="section-head"><span class="eyebrow">ادامه کاوش</span><h2>شاید این‌ها را هم بپسندید</h2></div>
       <div class="products" id="relatedGrid"></div>
     </section>`;
 
-  $("#crumbTrail").innerHTML = `<a href="index.html">Home</a> / <a href="shop.html?cat=${cat.slug}">${cat.name}</a> / ${escapeHtml(p.name)}`;
+  $("#crumbTrail").innerHTML = `<a href="index.html">خانه</a> / <a href="shop.html?cat=${cat.slug}">${cat.name}</a> / ${escapeHtml(p.name)}`;
   $("#crumbTitle").textContent = p.name;
 
   $$(".qv-thumb", $("#pdTop")).forEach(t => t.onclick = () => { img = +t.dataset.i; $("#pdMain .p-emoji").textContent = p.images[img] === "chrono" ? "⏱️" : p.images[img]; $$(".pd-thumbs .qv-thumb").forEach(x => x.classList.remove("active")); t.classList.add("active"); });
   const pick = (sel, nameSel, set) => $$(sel + " .chip").forEach(c => c.onclick = () => { $$(sel + " .chip").forEach(x => x.classList.remove("active")); c.classList.add("active"); set(c.dataset.v); $(nameSel).textContent = c.dataset.v; });
   pick("#pdColors", "#pdColorName", v => color = v); pick("#pdSizes", "#pdSizeName", v => size = v);
-  $("#pdMinus").onclick = () => { qty = Math.max(1, qty - 1); $("#pdQty").value = qty; };
-  $("#pdPlus").onclick = () => { qty = Math.min(p.stock, qty + 1); $("#pdQty").value = qty; };
-  const addAct = goCheckout => { Store.cartAdd(p.id, qty, { color, size }); refreshBadges(true); toast("Product added to your cart.", "success"); if (goCheckout) location.href = "checkout.html"; else { renderCartDrawer({ id: p.id }); $("#cartDrawer").classList.add("open"); $("#cartBackdrop").classList.add("show"); } };
+  $("#pdMinus").onclick = () => { qty = Math.max(1, qty - 1); $("#pdQty").value = faNum(qty); };
+  $("#pdPlus").onclick = () => { qty = Math.min(p.stock, qty + 1); $("#pdQty").value = faNum(qty); };
+  const addAct = goCheckout => { Store.cartAdd(p.id, qty, { color, size }); refreshBadges(true); toast("محصول به سبد خرید شما اضافه شد.", "success"); if (goCheckout) location.href = "checkout.html"; else { renderCartDrawer({ id: p.id }); $("#cartDrawer").classList.add("open"); $("#cartBackdrop").classList.add("show"); } };
   $("#pdAdd").onclick = () => addAct(false);
   $("#pdBuy").onclick = () => addAct(true);
-  $("#pdWish").onclick = () => { const on = Store.wishToggle(p.id); toast(on ? "Added to wishlist ♥" : "Removed from wishlist"); $("#pdWish svg path").setAttribute("fill", on ? "#E02D3C" : "none"); };
+  $("#pdWish").onclick = () => { const on = Store.wishToggle(p.id); toast(on ? "به علاقه‌مندی‌ها اضافه شد ♥" : "از علاقه‌مندی‌ها حذف شد"); $("#pdWish svg path").setAttribute("fill", on ? "#E02D3C" : "none"); };
   const panels = {
-    desc: `<p>${p.description}</p><p style="margin-top:10px">Every order ships in recyclable, plastic-free packaging and is covered by our 30-day satisfaction guarantee.</p>`,
+    desc: `<p>${p.description}</p><p style="margin-top:10px">هر سفارش در بسته‌بندی بازیافتنی و بدون پلاستیک ارسال می‌شود و شامل ۳۰ روز ضمانت رضایت ماست.</p>`,
     spec: `<table class="spec-table">
-      <tr><td>Brand</td><td>${escapeHtml(p.brand)}</td></tr>
-      <tr><td>Category</td><td>${cat.name} — ${escapeHtml(p.subcategory)}</td></tr>
-      <tr><td>SKU</td><td>${p.sku}</td></tr>
-      <tr><td>Colors</td><td>${p.colors.join(", ")}</td></tr>
-      <tr><td>Sizes</td><td>${p.sizes.join(", ")}</td></tr>
-      <tr><td>Stock</td><td>${p.stock} units</td></tr>
-      <tr><td>Warranty</td><td>2 years</td></tr></table>`,
-    rev: TESTIMONIALS.slice(0, 3).map(t => `<div class="t-card" style="margin-bottom:12px"><div class="t-head"><span class="t-ava">${t.initials}</span><div><div class="t-name">${t.name}</div><div class="t-verified">✓ Verified Buyer</div></div></div><div class="t-stars">${"★".repeat(t.stars)}${"☆".repeat(5 - t.stars)}</div><p class="t-text">${t.text}</p></div>`).join(""),
-    ship: `<p><b>Standard shipping</b> (3–5 business days) is free on orders over $50, otherwise $5.99. <b>Express shipping</b> (1–2 business days) is $14.99.</p><p style="margin-top:10px">Returns are accepted within 30 days of delivery. Items must be unused and in original packaging. Refunds are processed within 3–5 business days.</p>`,
+      <tr><td>برند</td><td>${escapeHtml(p.brand)}</td></tr>
+      <tr><td>دسته‌بندی</td><td>${cat.name} — ${escapeHtml(p.subcategory)}</td></tr>
+      <tr><td>کد کالا</td><td>${p.sku}</td></tr>
+      <tr><td>رنگ‌ها</td><td>${p.colors.join("، ")}</td></tr>
+      <tr><td>سایزها</td><td>${p.sizes.join("، ")}</td></tr>
+      <tr><td>موجودی</td><td>${faNum(p.stock)} عدد</td></tr>
+      <tr><td>گارانتی</td><td>۲ سال</td></tr></table>`,
+    rev: TESTIMONIALS.slice(0, 3).map(t => `<div class="t-card" style="margin-bottom:12px"><div class="t-head"><span class="t-ava">${t.initials}</span><div><div class="t-name">${t.name}</div><div class="t-verified">✓ خریدار تأییدشده</div></div></div><div class="t-stars">${"★".repeat(t.stars)}${"☆".repeat(5 - t.stars)}</div><p class="t-text">${t.text}</p></div>`).join(""),
+    ship: `<p><b>ارسال عادی</b> (۳ تا ۵ روز کاری) برای سفارش‌های بالای ۵۰ تومان رایگان است، در غیر این صورت ${money(5.99)} است. <b>ارسال فوری</b> (۱ تا ۲ روز کاری) ${money(14.99)} است.</p><p style="margin-top:10px">بازگشت کالا تا ۳۰ روز پس از تحویل پذیرفته می‌شود. کالا باید استفاده‌نشده و در بسته‌بندی اصلی باشد. مبلغ بازگشتی ظرف ۳ تا ۵ روز کاری به روش پرداخت اصلی واریز می‌شود.</p>`,
   };
   const showTab = k => { $("#pdPanel").innerHTML = panels[k]; $$(".tabs-line button").forEach(b => b.classList.toggle("active", b.dataset.t === k)); };
   showTab("desc");
@@ -275,7 +275,7 @@ function renderCartPage() {
   const lines = Store.cartLines();
   const wrap = $("#cartWrap");
   if (!lines.length) {
-    wrap.innerHTML = `<div class="empty-state"><div class="empty-emoji">🛒</div><h3>Your cart is empty</h3><p>Looks like you haven't added anything yet.</p><a class="btn btn-primary" href="shop.html">START SHOPPING</a></div>`;
+    wrap.innerHTML = `<div class="empty-state"><div class="empty-emoji">🛒</div><h3>سبد خرید شما خالی است</h3><p>به نظر می‌رسد هنوز چیزی اضافه نکرده‌اید.</p><a class="btn btn-primary" href="shop.html">شروع خرید</a></div>`;
     return;
   }
   const promo = Store.getPromo();
@@ -284,51 +284,53 @@ function renderCartPage() {
     <div class="cart-layout">
       <div class="admin-card" style="padding:0;overflow:hidden">
         <table class="cart-table">
-          <thead><tr><th>Product</th><th class="hide-m">Price</th><th>Quantity</th><th class="hide-m">Subtotal</th><th></th></tr></thead>
+          <thead><tr><th>محصول</th><th class="hide-m">قیمت</th><th>تعداد</th><th class="hide-m">جمع جزء</th><th></th></tr></thead>
           <tbody>${lines.map(l => `
             <tr data-key="${l.key}">
               <td><div class="cart-prod"><span class="thumb" style="background:${gradCss(catOf(l.product.category).grad)}">${l.product.images[0]}</span>
                 <div><div class="n"><a href="product.html?slug=${l.product.slug}">${escapeHtml(l.product.name)}</a></div><div class="c">${l.color} · ${l.size}</div></div></div></td>
               <td class="td-price hide-m">${money(Store.effPrice(l.product))}</td>
-              <td><div class="qty-ctl"><button data-d="-1">−</button><input value="${l.qty}" readonly aria-label="Quantity"><button data-d="1">+</button></div></td>
+              <td><div class="qty-ctl"><button data-d="-1">−</button><input value="${faNum(l.qty)}" readonly aria-label="تعداد"><button data-d="1">+</button></div></td>
               <td class="td-total hide-m">${money(Store.effPrice(l.product) * l.qty)}</td>
-              <td><button class="remove-btn" aria-label="Remove item">✕</button></td>
+              <td><button class="remove-btn" aria-label="حذف کالا">✕</button></td>
             </tr>`).join("")}</tbody>
         </table>
       </div>
       <div class="summary">
-        <h3>Order Summary</h3>
-        <div class="promo-row"><input id="promoInput" placeholder="Promo code (try SAVE10)" value="${promo ? promo.code : ""}"><button class="btn btn-ghost" id="promoApply">APPLY</button></div>
-        <div class="sum-row"><span>Subtotal</span><span>${money(t.subtotal)}</span></div>
-        ${t.discount ? `<div class="sum-row"><span>Discount (${promo.pct}%)</span><span style="color:#0E9F6E">−${money(t.discount)}</span></div>` : ""}
-        <div class="sum-row"><span>Shipping</span><span>${t.shipping === 0 ? '<span class="free">FREE</span>' : money(t.shipping)}</span></div>
-        <div class="sum-row"><span>Tax (8%)</span><span>${money(t.tax)}</span></div>
-        <div class="sum-row total"><span>Total</span><span>${money(t.total)}</span></div>
-        <a class="btn btn-primary btn-block" href="checkout.html" style="margin-top:14px">PROCEED TO CHECKOUT</a>
-        <a class="cd-continue" href="shop.html" style="display:block;margin-top:12px">Continue shopping</a>
+        <h3>خلاصه سفارش</h3>
+        <div class="promo-row"><input id="promoInput" placeholder="کد تخفیف (مثلاً SAVE10)" value="${promo ? promo.code : ""}"><button class="btn btn-ghost" id="promoApply">اعمال</button></div>
+        <div class="sum-row"><span>جمع سبد</span><span>${money(t.subtotal)}</span></div>
+        ${t.discount ? `<div class="sum-row"><span>تخفیف (${faNum(promo.pct)}٪)</span><span style="color:#0E9F6E">−${money(t.discount)}</span></div>` : ""}
+        <div class="sum-row"><span>هزینه ارسال</span><span>${t.shipping === 0 ? '<span class="free">رایگان</span>' : money(t.shipping)}</span></div>
+        <div class="sum-row"><span>مالیات (۸٪)</span><span>${money(t.tax)}</span></div>
+        <div class="sum-row total"><span>مبلغ نهایی</span><span>${money(t.total)}</span></div>
+        <a class="btn btn-primary btn-block" href="checkout.html" style="margin-top:14px">تسویه حساب</a>
+        <a class="cd-continue" href="shop.html" style="display:block;margin-top:12px">ادامه خرید</a>
       </div>
     </div>`;
   $$("[data-key]", wrap).forEach(row => {
     const key = row.dataset.key;
     $$("[data-d]", row).forEach(b => b.onclick = () => { Store.cartQty(key, +b.dataset.d); refreshBadges(); renderCartPage(); });
-    $(".remove-btn", row).onclick = () => { Store.cartRemove(key); refreshBadges(); renderCartPage(); toast("Item removed from cart."); };
+    $(".remove-btn", row).onclick = () => { Store.cartRemove(key); refreshBadges(); renderCartPage(); toast("کالا از سبد خرید حذف شد."); };
   });
   $("#promoApply").onclick = () => {
     const code = $("#promoInput").value.trim().toUpperCase();
     const c = COUPONS.find(c => c.code === code && c.active);
-    if (c) { Store.setPromo(c); toast(`Promo applied — ${c.pct}% off!`, "success"); renderCartPage(); }
-    else { Store.setPromo(null); toast("Invalid or expired promo code.", "error"); renderCartPage(); }
+    if (c) { Store.setPromo(c); toast(`کد تخفیف اعمال شد — ${faNum(c.pct)}٪ تخفیف!`, "success"); renderCartPage(); }
+    else { Store.setPromo(null); toast("کد تخفیف نامعتبر یا منقضی است.", "error"); renderCartPage(); }
   };
 }
 
 /* ================= CHECKOUT ================= */
+const PAY_FA = { "Credit/Debit Card": "کارت بانکی", "PayPal": "پی‌پال", "Cash on Delivery": "پرداخت در محل" };
+const SHIP_FA = { "Standard": "ارسال عادی", "Express": "ارسال فوری" };
 function renderCheckout() {
   const lines = Store.cartLines();
-  if (!lines.length) { $("#checkoutWrap").innerHTML = `<div class="empty-state"><div class="empty-emoji">🛒</div><h3>Your cart is empty</h3><p>Add some products before checking out.</p><a class="btn btn-primary" href="shop.html">START SHOPPING</a></div>`; return; }
+  if (!lines.length) { $("#checkoutWrap").innerHTML = `<div class="empty-state"><div class="empty-emoji">🛒</div><h3>سبد خرید شما خالی است</h3><p>پیش از تسویه حساب، چند محصول به سبد اضافه کنید.</p><a class="btn btn-primary" href="shop.html">شروع خرید</a></div>`; return; }
   const u = Store.currentUser();
   const state = { step: 1, ship: "Standard", pay: "Credit/Debit Card" };
   const fmtItem = l => `<div class="cd-item"><span class="cd-thumb" style="background:${gradCss(catOf(l.product.category).grad)}">${l.product.images[0]}</span>
-    <div class="cd-info"><div class="n">${escapeHtml(l.product.name)} × ${l.qty}</div><div class="p">${money(Store.effPrice(l.product) * l.qty)}</div></div></div>`;
+    <div class="cd-info"><div class="n">${escapeHtml(l.product.name)} × ${faNum(l.qty)}</div><div class="p">${money(Store.effPrice(l.product) * l.qty)}</div></div></div>`;
   const totals = () => Store.cartTotals(Store.getPromo()?.pct || 0, state.ship === "Express" ? 14.99 : null);
 
   function draw() {
@@ -337,67 +339,67 @@ function renderCheckout() {
       <div class="checkout-layout">
         <div>
           <div class="steps">
-            ${["Information", "Shipping", "Payment", "Review"].map((n, i) => `
+            ${["اطلاعات", "ارسال", "پرداخت", "بازبینی"].map((n, i) => `
               <div class="step ${state.step === i + 1 ? "active" : ""} ${state.step > i + 1 ? "done" : ""}">
-                <span class="dot">${state.step > i + 1 ? "✓" : i + 1}</span> ${n}
+                <span class="dot">${state.step > i + 1 ? "✓" : faNum(i + 1)}</span> ${n}
               </div>`).join("")}
           </div>
           <div class="admin-card">
             ${state.step === 1 ? `
-            <h3>Contact &amp; Address</h3>
+            <h3>اطلاعات تماس و آدرس</h3>
             <div class="form-grid">
-              <div class="field"><label>First Name *</label><input id="fName" value="${u ? u.name.split(" ")[0] : ""}"><span class="err">Required</span></div>
-              <div class="field"><label>Last Name *</label><input id="lName" value="${u ? u.name.split(" ")[1] || "" : ""}"><span class="err">Required</span></div>
-              <div class="field"><label>Email *</label><input id="fEmail" type="email" value="${u ? u.email : ""}"><span class="err">Enter a valid email</span></div>
-              <div class="field"><label>Phone *</label><input id="fPhone" value="${u ? u.phone : ""}"><span class="err">Required</span></div>
-              <div class="field full"><label>Street Address *</label><input id="fAddr" value="${u ? u.address : ""}"><span class="err">Required</span></div>
-              <div class="field"><label>City *</label><input id="fCity"><span class="err">Required</span></div>
-              <div class="field"><label>State *</label><input id="fState"><span class="err">Required</span></div>
-              <div class="field"><label>Postal Code *</label><input id="fZip"><span class="err">Required</span></div>
-              <div class="field"><label>Country *</label><select id="fCountry"><option>United States</option><option>Canada</option><option>United Kingdom</option><option>Germany</option><option>United Arab Emirates</option><option>Other</option></select></div>
+              <div class="field"><label>نام *</label><input id="fName" value="${u ? u.name.split(" ")[0] : ""}"><span class="err">الزامی</span></div>
+              <div class="field"><label>نام خانوادگی *</label><input id="lName" value="${u ? u.name.split(" ")[1] || "" : ""}"><span class="err">الزامی</span></div>
+              <div class="field"><label>ایمیل *</label><input id="fEmail" type="email" value="${u ? u.email : ""}"><span class="err">یک ایمیل معتبر وارد کنید</span></div>
+              <div class="field"><label>شماره تماس *</label><input id="fPhone" value="${u ? u.phone : ""}"><span class="err">الزامی</span></div>
+              <div class="field full"><label>آدرس کامل *</label><input id="fAddr" value="${u ? u.address : ""}"><span class="err">الزامی</span></div>
+              <div class="field"><label>شهر *</label><input id="fCity"><span class="err">الزامی</span></div>
+              <div class="field"><label>استان *</label><input id="fState"><span class="err">الزامی</span></div>
+              <div class="field"><label>کد پستی *</label><input id="fZip"><span class="err">الزامی</span></div>
+              <div class="field"><label>کشور *</label><select id="fCountry"><option>ایران</option><option>امارات متحده عربی</option><option>کانادا</option><option>آلمان</option><option>بریتانیا</option><option>سایر</option></select></div>
             </div>` : ""}
             ${state.step === 2 ? `
-            <h3>Shipping Method</h3>
+            <h3>روش ارسال</h3>
             <div class="ship-opts">
-              <div class="ship-opt ${state.ship === "Standard" ? "active" : ""}" data-ship="Standard"><input type="radio" name="ship" checked style="accent-color:var(--bright)"><div style="flex:1"><b>Standard Delivery</b><div style="font-size:12.5px;color:var(--muted)">3–5 business days</div></div><b>${t.subtotal >= 50 ? "FREE" : "$5.99"}</b></div>
-              <div class="ship-opt ${state.ship === "Express" ? "active" : ""}" data-ship="Express"><input type="radio" name="ship" style="accent-color:var(--bright)"><div style="flex:1"><b>Express Delivery</b><div style="font-size:12.5px;color:var(--muted)">1–2 business days</div></div><b>$14.99</b></div>
+              <div class="ship-opt ${state.ship === "Standard" ? "active" : ""}" data-ship="Standard"><input type="radio" name="ship" checked style="accent-color:var(--bright)"><div style="flex:1"><b>ارسال عادی</b><div style="font-size:12.5px;color:var(--muted)">۳ تا ۵ روز کاری</div></div><b>${t.subtotal >= 50 ? "رایگان" : money(5.99)}</b></div>
+              <div class="ship-opt ${state.ship === "Express" ? "active" : ""}" data-ship="Express"><input type="radio" name="ship" style="accent-color:var(--bright)"><div style="flex:1"><b>ارسال فوری</b><div style="font-size:12.5px;color:var(--muted)">۱ تا ۲ روز کاری</div></div><b>${money(14.99)}</b></div>
             </div>` : ""}
             ${state.step === 3 ? `
-            <h3>Payment Method</h3>
+            <h3>روش پرداخت</h3>
             <div class="pay-opts">
               ${["Credit/Debit Card", "PayPal", "Cash on Delivery"].map(m => `
-                <div class="pay-opt ${state.pay === m ? "active" : ""}" data-pay="${m}"><input type="radio" name="pay" ${state.pay === m ? "checked" : ""} style="accent-color:var(--bright)"><div style="flex:1"><b>${m}</b>${m === "Credit/Debit Card" ? `<div style="font-size:12.5px;color:var(--muted)">Visa, Mastercard, Amex</div>` : m === "PayPal" ? `<div style="font-size:12.5px;color:var(--muted)">Redirects to PayPal</div>` : `<div style="font-size:12.5px;color:var(--muted)">Pay when your order arrives</div>`}</div><span>${m === "Credit/Debit Card" ? "💳" : m === "PayPal" ? "🅿️" : "💵"}</span></div>`).join("")}
+                <div class="pay-opt ${state.pay === m ? "active" : ""}" data-pay="${m}"><input type="radio" name="pay" ${state.pay === m ? "checked" : ""} style="accent-color:var(--bright)"><div style="flex:1"><b>${PAY_FA[m]}</b>${m === "Credit/Debit Card" ? `<div style="font-size:12.5px;color:var(--muted)">ویزا، مسترکارت، امریکن اکسپرس</div>` : m === "PayPal" ? `<div style="font-size:12.5px;color:var(--muted)">انتقال به پی‌پال</div>` : `<div style="font-size:12.5px;color:var(--muted)">پرداخت هنگام دریافت سفارش</div>`}</div><span>${m === "Credit/Debit Card" ? "💳" : m === "PayPal" ? "🅿️" : "💵"}</span></div>`).join("")}
             </div>
             ${state.pay === "Credit/Debit Card" ? `
             <div class="form-grid" style="margin-top:16px">
-              <div class="field full"><label>Card Number *</label><input id="fCard" placeholder="4242 4242 4242 4242" maxlength="19"><span class="err">Enter a 16-digit card number</span></div>
-              <div class="field"><label>Expiry *</label><input id="fExp" placeholder="MM/YY" maxlength="5"><span class="err">Format MM/YY</span></div>
-              <div class="field"><label>CVC *</label><input id="fCvc" placeholder="123" maxlength="4"><span class="err">3–4 digits</span></div>
+              <div class="field full"><label>شماره کارت *</label><input id="fCard" placeholder="4242 4242 4242 4242" maxlength="19"><span class="err">شماره کارت ۱۶ رقمی وارد کنید</span></div>
+              <div class="field"><label>تاریخ انقضا *</label><input id="fExp" placeholder="MM/YY" maxlength="5"><span class="err">قالب MM/YY</span></div>
+              <div class="field"><label>CVC *</label><input id="fCvc" placeholder="123" maxlength="4"><span class="err">۳ تا ۴ رقم</span></div>
             </div>` : ""}
-            <div class="secure-note">🔒 Payments are encrypted and processed securely. This is a demo store — no real charge occurs.</div>` : ""}
+            <div class="secure-note">🔒 پرداخت‌ها به‌صورت رمزنگاری‌شده و امن پردازش می‌شوند. این فروشگاه نسخه نمایشی است — هیچ مبلغ واقعی کسر نمی‌شود.</div>` : ""}
             ${state.step === 4 ? `
-            <h3>Review Order</h3>
+            <h3>بازبینی سفارش</h3>
             <div class="order-review">
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:13.5px">
-                <div><b>Ship to</b><div style="color:var(--muted)" id="rvAddr"></div></div>
-                <div><b>Method</b><div style="color:var(--muted)">${state.ship} · ${state.pay}</div></div>
+                <div><b>آدرس تحویل</b><div style="color:var(--muted)" id="rvAddr"></div></div>
+                <div><b>روش ارسال و پرداخت</b><div style="color:var(--muted)">${SHIP_FA[state.ship]} · ${PAY_FA[state.pay]}</div></div>
               </div>
             </div>
             <div style="margin-top:14px">${lines.map(fmtItem).join("")}</div>` : ""}
           </div>
           <div class="checkout-nav">
-            ${state.step > 1 ? `<button class="btn btn-outline" id="ckBack">← BACK</button>` : `<a class="btn btn-outline" href="cart.html">← CART</a>`}
-            <button class="btn btn-primary" id="ckNext" style="flex:1">${state.step === 4 ? "PLACE ORDER" : "CONTINUE →"}</button>
+            ${state.step > 1 ? `<button class="btn btn-outline" id="ckBack">بازگشت</button>` : `<a class="btn btn-outline" href="cart.html">سبد خرید</a>`}
+            <button class="btn btn-primary" id="ckNext" style="flex:1">${state.step === 4 ? "ثبت سفارش" : "ادامه"}</button>
           </div>
         </div>
         <div class="summary">
-          <h3>Order Summary</h3>
+          <h3>خلاصه سفارش</h3>
           ${lines.map(fmtItem).join("")}
-          <div class="sum-row" style="margin-top:10px"><span>Subtotal</span><span>${money(t.subtotal)}</span></div>
-          ${t.discount ? `<div class="sum-row"><span>Discount</span><span style="color:#0E9F6E">−${money(t.discount)}</span></div>` : ""}
-          <div class="sum-row"><span>Shipping</span><span>${t.shipping === 0 ? '<span class="free">FREE</span>' : money(t.shipping)}</span></div>
-          <div class="sum-row"><span>Tax (8%)</span><span>${money(t.tax)}</span></div>
-          <div class="sum-row total"><span>Total</span><span>${money(t.total)}</span></div>
+          <div class="sum-row" style="margin-top:10px"><span>جمع سبد</span><span>${money(t.subtotal)}</span></div>
+          ${t.discount ? `<div class="sum-row"><span>تخفیف</span><span style="color:#0E9F6E">−${money(t.discount)}</span></div>` : ""}
+          <div class="sum-row"><span>هزینه ارسال</span><span>${t.shipping === 0 ? '<span class="free">رایگان</span>' : money(t.shipping)}</span></div>
+          <div class="sum-row"><span>مالیات (۸٪)</span><span>${money(t.tax)}</span></div>
+          <div class="sum-row total"><span>مبلغ نهایی</span><span>${money(t.total)}</span></div>
           <div class="pay-badges" style="margin-top:16px"><span class="pay-chip">VISA</span><span class="pay-chip">MC</span><span class="pay-chip">PAYPAL</span><span class="pay-chip">SSL</span></div>
         </div>
       </div>`;
@@ -409,7 +411,7 @@ function renderCheckout() {
       if (state.step === 1 && !validate(["fName", "lName", "fEmail", "fPhone", "fAddr", "fCity", "fState", "fZip"])) return;
       if (state.step === 1) state.info = { first: $("#fName").value, last: $("#lName").value, email: $("#fEmail").value, phone: $("#fPhone").value, addr: $("#fAddr").value, city: $("#fCity").value, st: $("#fState").value, zip: $("#fZip").value, country: $("#fCountry").value };
       if (state.step === 3 && state.pay === "Credit/Debit Card" && !validate(["fCard", "fExp", "fCvc"])) return;
-      if (state.step < 4) { state.step++; draw(); if (state.step === 4 && state.info) $("#rvAddr").textContent = `${state.info.first} ${state.info.last}, ${state.info.addr}, ${state.info.city}, ${state.info.st} ${state.info.zip}, ${state.info.country}`; return; }
+      if (state.step < 4) { state.step++; draw(); if (state.step === 4 && state.info) $("#rvAddr").textContent = `${state.info.first} ${state.info.last}، ${state.info.addr}، ${state.info.city}، ${state.info.st} ${state.info.zip}، ${state.info.country}`; return; }
       placeOrder();
     };
   }
@@ -426,7 +428,7 @@ function renderCheckout() {
       f.classList.toggle("invalid", !good);
       if (!good) ok = false;
     });
-    if (!ok) toast("Please fix the highlighted fields.", "error");
+    if (!ok) toast("لطفاً فیلدهای مشخص‌شده را اصلاح کنید.", "error");
     return ok;
   }
   function placeOrder() {
@@ -436,26 +438,26 @@ function renderCheckout() {
       const id = "APN-" + Math.floor(10000 + Math.random() * 90000);
       const order = {
         id, user: (state.info?.email || Store.currentUser()?.email || "guest@apnastore.com"),
-        name: (state.info ? `${state.info.first} ${state.info.last}`.trim() : Store.currentUser()?.name || "Guest"),
+        name: (state.info ? `${state.info.first} ${state.info.last}`.trim() : Store.currentUser()?.name || "مهمان"),
         items: lines.map(l => ({ id: l.id, qty: l.qty, color: l.color, size: l.size })),
         subtotal: t.subtotal, discount: t.discount, shipping: t.shipping, tax: t.tax, total: t.total,
         paymentMethod: state.pay, shippingMethod: state.ship, status: "Confirmed",
         createdAt: new Date().toISOString().slice(0, 10),
-        address: state.info ? `${state.info.addr}, ${state.info.city}, ${state.info.st} ${state.info.zip}, ${state.info.country}` : (Store.currentUser()?.address || "—"),
+        address: state.info ? `${state.info.addr}، ${state.info.city}، ${state.info.st} ${state.info.zip}، ${state.info.country}` : (Store.currentUser()?.address || "—"),
       };
       Store.addOrder(order); Store.cartClear(); Store.setPromo(null); refreshBadges();
       $("#checkoutWrap").innerHTML = `
         <div class="success-panel">
           <div class="success-ico">✓</div>
-          <h1 style="font-size:30px">Thank you for your order!</h1>
-          <p style="color:var(--muted);margin:10px 0 6px">Order <b style="color:var(--navy)">${order.id}</b> has been placed successfully.</p>
-          <p style="color:var(--muted)">A confirmation email is on its way to you.</p>
+          <h1 style="font-size:30px">از سفارش شما سپاسگزاریم!</h1>
+          <p style="color:var(--muted);margin:10px 0 6px">سفارش <b style="color:var(--navy)">${order.id}</b> با موفقیت ثبت شد.</p>
+          <p style="color:var(--muted)">ایمیل تأیید به‌زودی برای شما ارسال می‌شود.</p>
           <div style="display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap">
-            <a class="btn btn-primary" href="track.html?order=${order.id}">TRACK ORDER</a>
-            <a class="btn btn-outline" href="shop.html">CONTINUE SHOPPING</a>
+            <a class="btn btn-primary" href="track.html?order=${order.id}">پیگیری سفارش</a>
+            <a class="btn btn-outline" href="shop.html">ادامه خرید</a>
           </div>
         </div>`;
-      toast("Order placed successfully!", "success");
+      toast("سفارش با موفقیت ثبت شد!", "success");
     }, 900);
   }
   draw();
@@ -467,7 +469,7 @@ function renderWishlistPage() {
   const list = ids.map(id => Store.byId(id)).filter(Boolean);
   const el = $("#wishWrap");
   if (!list.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-emoji">💛</div><h3>Your wishlist is waiting for you</h3><p>Tap the heart on any product to save it here for later.</p><a class="btn btn-primary" href="shop.html">DISCOVER PRODUCTS</a></div>`;
+    el.innerHTML = `<div class="empty-state"><div class="empty-emoji">💛</div><h3>لیست علاقه‌مندی‌های شما منتظر است</h3><p>روی قلب هر محصول بزنید تا برای بعد اینجا ذخیره شود.</p><a class="btn btn-primary" href="shop.html">کشف محصولات</a></div>`;
     return;
   }
   el.innerHTML = `<div class="products" style="grid-template-columns:repeat(4,1fr)">${list.map(p => productCard(p)).join("")}</div>`;
@@ -483,60 +485,60 @@ function renderAccount() {
   $("#accSide").innerHTML = `
     <div class="acc-user"><span class="acc-ava">${u.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()}</span>
       <div><b style="font-size:14px">${escapeHtml(u.name)}</b><div style="font-size:12px;color:var(--muted)">${escapeHtml(u.email)}</div></div></div>
-    ${[["dashboard", "Dashboard"], ["orders", "Orders"], ["wishlist", "Wishlist"], ["profile", "Profile"], ["settings", "Settings"]].map(([k, n]) =>
+    ${[["dashboard", "پیشخوان"], ["orders", "سفارش‌ها"], ["wishlist", "علاقه‌مندی‌ها"], ["profile", "پروفایل"], ["settings", "تنظیمات"]].map(([k, n]) =>
       `<button class="acc-link ${view === k ? "active" : ""}" data-view="${k}">${n}</button>`).join("")}
-    <button class="acc-link" id="accLogout" style="color:var(--danger)">Logout</button>`;
+    <button class="acc-link" id="accLogout" style="color:var(--danger)">خروج از حساب</button>`;
   const main = $("#accMain");
   const views = {
     dashboard: () => {
       const pending = orders.filter(o => !["Delivered", "Cancelled"].includes(o.status)).length;
       const done = orders.filter(o => o.status === "Delivered").length;
-      main.innerHTML = `<h2 style="font-size:22px;margin-bottom:18px">Dashboard</h2>
+      main.innerHTML = `<h2 style="font-size:22px;margin-bottom:18px">پیشخوان</h2>
         <div class="metric-grid">
-          <div class="metric"><div class="m-num">${orders.length}</div><div class="m-lbl">Total Orders</div></div>
-          <div class="metric"><div class="m-num">${pending}</div><div class="m-lbl">Pending Orders</div></div>
-          <div class="metric"><div class="m-num">${done}</div><div class="m-lbl">Completed Orders</div></div>
-          <div class="metric"><div class="m-num">${wishN}</div><div class="m-lbl">Wishlist Items</div></div>
+          <div class="metric"><div class="m-num">${faNum(orders.length)}</div><div class="m-lbl">کل سفارش‌ها</div></div>
+          <div class="metric"><div class="m-num">${faNum(pending)}</div><div class="m-lbl">سفارش‌های در جریان</div></div>
+          <div class="metric"><div class="m-num">${faNum(done)}</div><div class="m-lbl">سفارش‌های تحویل‌شده</div></div>
+          <div class="metric"><div class="m-num">${faNum(wishN)}</div><div class="m-lbl">کالاهای موردعلاقه</div></div>
         </div>
-        <h3 style="font-size:16px;margin-bottom:12px">Recent Orders</h3>
-        <table class="data-table"><thead><tr><th>Order</th><th>Date</th><th>Total</th><th>Status</th><th></th></tr></thead><tbody>
-          ${orders.slice(0, 5).map(o => `<tr><td><b>${o.id}</b></td><td>${o.createdAt}</td><td>${money(o.total)}</td><td><span class="status-pill status-${o.status.toLowerCase().replace(/\s/g, "")}">${o.status}</span></td><td><a class="btn btn-ghost btn-sm" href="track.html?order=${o.id}">TRACK</a></td></tr>`).join("")}
+        <h3 style="font-size:16px;margin-bottom:12px">سفارش‌های اخیر</h3>
+        <table class="data-table"><thead><tr><th>سفارش</th><th>تاریخ</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead><tbody>
+          ${orders.slice(0, 5).map(o => `<tr><td><b>${o.id}</b></td><td>${faNum(o.createdAt)}</td><td>${money(o.total)}</td><td><span class="status-pill status-${o.status.toLowerCase().replace(/\s/g, "")}">${stFa(o.status)}</span></td><td><a class="btn btn-ghost btn-sm" href="track.html?order=${o.id}">پیگیری</a></td></tr>`).join("")}
         </tbody></table>`;
     },
     orders: () => {
-      main.innerHTML = `<h2 style="font-size:22px;margin-bottom:18px">My Orders</h2>
-        ${orders.length ? `<table class="data-table"><thead><tr><th>Order</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th><th></th></tr></thead><tbody>
-        ${orders.map(o => `<tr><td><b>${o.id}</b></td><td>${o.createdAt}</td><td>${o.items.reduce((s, i) => s + i.qty, 0)}</td><td>${money(o.total)}</td><td><span class="status-pill status-${o.status.toLowerCase().replace(/\s/g, "")}">${o.status}</span></td><td><a class="btn btn-ghost btn-sm" href="track.html?order=${o.id}">TRACK</a></td></tr>`).join("")}
-        </tbody></table>` : `<div class="empty-state"><div class="empty-emoji">📦</div><h3>No orders yet</h3><p>Your orders will appear here after checkout.</p><a class="btn btn-primary" href="shop.html">START SHOPPING</a></div>`}`;
+      main.innerHTML = `<h2 style="font-size:22px;margin-bottom:18px">سفارش‌های من</h2>
+        ${orders.length ? `<table class="data-table"><thead><tr><th>سفارش</th><th>تاریخ</th><th>اقلام</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead><tbody>
+        ${orders.map(o => `<tr><td><b>${o.id}</b></td><td>${faNum(o.createdAt)}</td><td>${faNum(o.items.reduce((s, i) => s + i.qty, 0))}</td><td>${money(o.total)}</td><td><span class="status-pill status-${o.status.toLowerCase().replace(/\s/g, "")}">${stFa(o.status)}</span></td><td><a class="btn btn-ghost btn-sm" href="track.html?order=${o.id}">پیگیری</a></td></tr>`).join("")}
+        </tbody></table>` : `<div class="empty-state"><div class="empty-emoji">📦</div><h3>هنوز سفارشی ندارید</h3><p>سفارش‌های شما پس از تسویه حساب اینجا نمایش داده می‌شوند.</p><a class="btn btn-primary" href="shop.html">شروع خرید</a></div>`}`;
     },
-    wishlist: () => { main.innerHTML = `<h2 style="font-size:22px;margin-bottom:18px">My Wishlist</h2><div id="wishWrap"></div>`; renderWishlistPage(); },
+    wishlist: () => { main.innerHTML = `<h2 style="font-size:22px;margin-bottom:18px">علاقه‌مندی‌های من</h2><div id="wishWrap"></div>`; renderWishlistPage(); },
     profile: () => {
-      main.innerHTML = `<h2 style="font-size:22px;margin-bottom:18px">Profile</h2>
+      main.innerHTML = `<h2 style="font-size:22px;margin-bottom:18px">پروفایل</h2>
         <div class="admin-card" style="max-width:520px">
-          <div class="field"><label>Full Name</label><input id="pfName" value="${escapeHtml(u.name)}"></div>
-          <div class="field"><label>Email</label><input value="${escapeHtml(u.email)}" disabled></div>
-          <div class="field"><label>Phone</label><input id="pfPhone" value="${escapeHtml(u.phone || "")}"></div>
-          <div class="field"><label>Address</label><input id="pfAddr" value="${escapeHtml(u.address || "")}"></div>
-          <button class="btn btn-primary" id="pfSave">SAVE CHANGES</button>
+          <div class="field"><label>نام و نام خانوادگی</label><input id="pfName" value="${escapeHtml(u.name)}"></div>
+          <div class="field"><label>ایمیل</label><input value="${escapeHtml(u.email)}" disabled></div>
+          <div class="field"><label>شماره تماس</label><input id="pfPhone" value="${escapeHtml(u.phone || "")}"></div>
+          <div class="field"><label>آدرس</label><input id="pfAddr" value="${escapeHtml(u.address || "")}"></div>
+          <button class="btn btn-primary" id="pfSave">ذخیره تغییرات</button>
         </div>`;
-      $("#pfSave").onclick = () => { Store.updateUser({ name: $("#pfName").value, phone: $("#pfPhone").value, address: $("#pfAddr").value }); toast("Profile updated.", "success"); renderAccount(); };
+      $("#pfSave").onclick = () => { Store.updateUser({ name: $("#pfName").value, phone: $("#pfPhone").value, address: $("#pfAddr").value }); toast("پروفایل به‌روزرسانی شد.", "success"); renderAccount(); };
     },
     settings: () => {
-      main.innerHTML = `<h2 style="font-size:22px;margin-bottom:18px">Settings</h2>
+      main.innerHTML = `<h2 style="font-size:22px;margin-bottom:18px">تنظیمات</h2>
         <div class="admin-card" style="max-width:520px">
-          <label class="check-row"><input type="checkbox" checked> Email me order updates</label>
-          <label class="check-row"><input type="checkbox" checked> Marketing &amp; exclusive deals</label>
-          <label class="check-row"><input type="checkbox"> SMS notifications</label>
-          <button class="btn btn-primary" style="margin-top:14px" onclick="toast('Preferences saved.','success')">SAVE PREFERENCES</button>
+          <label class="check-row"><input type="checkbox" checked> اطلاع‌رسانی ایمیلی سفارش‌ها</label>
+          <label class="check-row"><input type="checkbox" checked> پیشنهادها و تخفیف‌های ویژه</label>
+          <label class="check-row"><input type="checkbox"> پیامک اطلاع‌رسانی</label>
+          <button class="btn btn-primary" style="margin-top:14px" onclick="toast('تنظیمات ذخیره شد.','success')">ذخیره تنظیمات</button>
         </div>
         <div class="admin-card" style="max-width:520px">
-          <h3>Danger zone</h3>
-          <button class="btn btn-outline" style="color:var(--danger);border-color:#F4B7BD" id="accLogout2">LOGOUT</button>
+          <h3>منطقه خطر</h3>
+          <button class="btn btn-outline" style="color:var(--danger);border-color:#F4B7BD" id="accLogout2">خروج از حساب</button>
         </div>`;
       $("#accLogout2").onclick = doLogout;
     },
   };
-  const doLogout = () => { Store.logout(); toast("You have been logged out."); location.href = "login.html"; };
+  const doLogout = () => { Store.logout(); toast("از حساب خود خارج شدید."); location.href = "login.html"; };
   views[view]();
   $$("[data-view]").forEach(b => b.onclick = () => location.href = "account.html?tab=" + b.dataset.view);
   $("#accLogout").onclick = doLogout;
@@ -561,20 +563,20 @@ function initAuth() {
       setTimeout(() => {
         btn.classList.remove("loading");
         const u = Store.login(email, pass);
-        if (u) { toast(`Welcome back, ${u.name.split(" ")[0]}!`, "success"); location.href = "account.html"; }
-        else { mark("aPass", true); $(".err", $("#aPass").closest(".field")).textContent = "Invalid email or password."; toast("Login failed. Check your credentials.", "error"); }
+        if (u) { toast(`خوش آمدید، ${u.name.split(" ")[0]}!`, "success"); location.href = "account.html"; }
+        else { mark("aPass", true); $(".err", $("#aPass").closest(".field")).textContent = "ایمیل یا رمز عبور نادرست است."; toast("ورود ناموفق بود. اطلاعات خود را بررسی کنید.", "error"); }
       }, 700);
     } else {
       const name = get("aName"), phone = get("aPhone"), pass2 = get("aPass2");
       mark("aName", name.length < 2); mark("aPhone", phone.length < 6);
       mark("aPass2", pass2 !== pass || pass2.length < 6);
-      if (!ok) { toast("Please fix the highlighted fields.", "error"); return; }
+      if (!ok) { toast("لطفاً فیلدهای مشخص‌شده را اصلاح کنید.", "error"); return; }
       const btn = form.querySelector("button[type=submit]"); btn.classList.add("loading");
       setTimeout(() => {
         btn.classList.remove("loading");
         const r = Store.register({ name, email, phone, password: pass, address: "" });
         if (r.error) { toast(r.error, "error"); return; }
-        toast("Account created — welcome!", "success"); location.href = "account.html";
+        toast("حساب کاربری ساخته شد — خوش آمدید!", "success"); location.href = "account.html";
       }, 700);
     }
   };
@@ -583,9 +585,9 @@ function initAuth() {
 /* ================= TRACK ================= */
 const TRACK_STEPS = ["Order Placed", "Confirmed", "Processing", "Shipped", "Out for Delivery", "Delivered"];
 const TRACK_META = [
-  ["📦", "We have received your order."], ["✓", "Payment confirmed and order verified."],
-  ["⚙️", "Your items are being prepared and quality-checked."], ["🚚", "Your package has left our warehouse."],
-  ["🛵", "The courier is on the way to your address."], ["🏠", "Delivered — thank you for shopping with us!"],
+  ["📦", "سفارش شما را دریافت کردیم."], ["✓", "پرداخت تأیید و سفارش بررسی شد."],
+  ["⚙️", "کالاهای شما در حال آماده‌سازی و کنترل کیفیت است."], ["🚚", "بسته شما از انبار خارج شد."],
+  ["🛵", "پیک در مسیر آدرس شماست."], ["🏠", "تحویل شد — از خرید با ما سپاسگزاریم!"],
 ];
 function initTrack() {
   const go = () => {
@@ -594,22 +596,22 @@ function initTrack() {
     const order = Store.allOrders().find(o => o.id.toUpperCase() === id);
     const box = $("#trackResult");
     if (!order) {
-      box.innerHTML = `<div class="empty-state"><div class="empty-emoji">🔎</div><h3>Order not found</h3><p>Double-check the order number and try again.<br>Try a demo order: <b>APN-10234</b>, APN-10235, APN-10236</p></div>`;
+      box.innerHTML = `<div class="empty-state"><div class="empty-emoji">🔎</div><h3>سفارشی یافت نشد</h3><p>شماره سفارش را دوباره بررسی کنید.<br>با یک سفارش نمونه امتحان کنید: <b>APN-10234</b>، APN-10235، APN-10236</p></div>`;
       return;
     }
     const idx = TRACK_STEPS.indexOf(order.status);
     box.innerHTML = `
       <div class="admin-card">
         <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:center">
-          <div><b style="font-size:17px">${order.id}</b><div style="font-size:13px;color:var(--muted)">Placed on ${order.createdAt} · ${order.shippingMethod} shipping</div></div>
-          <span class="status-pill status-${order.status.toLowerCase().replace(/\s/g, "")}">${order.status}</span>
+          <div><b style="font-size:17px">${order.id}</b><div style="font-size:13px;color:var(--muted)">ثبت‌شده در ${faNum(order.createdAt)} · ${SHIP_FA[order.shippingMethod] || order.shippingMethod}</div></div>
+          <span class="status-pill status-${order.status.toLowerCase().replace(/\s/g, "")}">${stFa(order.status)}</span>
         </div>
       </div>
       <div class="timeline">
         ${TRACK_STEPS.map((s, i) => `
           <div class="tl-item ${i < idx ? "done" : ""} ${i === idx ? "current" : ""} ${i > idx ? "pending" : ""}">
             <span class="tl-dot">${TRACK_META[i][0]}</span>
-            <div><h4>${s}</h4><p>${i <= idx ? TRACK_META[i][1] : "Pending"}</p></div>
+            <div><h4>${stFa(s)}</h4><p>${i <= idx ? TRACK_META[i][1] : "در انتظار"}</p></div>
           </div>`).join("")}
       </div>`;
   };

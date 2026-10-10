@@ -1,27 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shop — APNA STORE</title>
-<meta name="description" content="Browse all products at APNA STORE. Filter by category, brand, price and rating.">
+<title>فروشگاه — APNA STORE</title>
+<meta name="description" content="مشاهده همه محصولات APNA STORE. فیلتر بر اساس دسته‌بندی، برند، قیمت و امتیاز.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230757C8'/><text x='16' y='23' font-size='17' font-weight='900' text-anchor='middle' fill='white' font-family='Arial'>A</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&family=Inter:wght@600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body data-page="shop">
 <div id="chromeHeader"></div>
-<div class="page-hero"><div class="container"><h1 id="shopTitle">Shop</h1><div class="crumbs" id="crumbTrail"><a href="index.html">Home</a> / Shop</div></div></div>
+<div class="page-hero"><div class="container"><h1 id="shopTitle">فروشگاه</h1><div class="crumbs" id="crumbTrail"><a href="index.html">خانه</a> / فروشگاه</div></div></div>
 <div class="container shop-layout">
-  <aside class="filters" id="filterBox" aria-label="Product filters"></aside>
+  <aside class="filters" id="filterBox" aria-label="فیلتر محصولات"></aside>
   <div>
     <div class="shop-toolbar">
-      <button class="btn btn-outline btn-sm filter-toggle">⚙ FILTERS</button>
+      <button class="btn btn-outline btn-sm filter-toggle">⚙ فیلترها</button>
       <span class="result-count" id="resultCount"></span>
-      <div class="sort-select"><select id="sortSel" aria-label="Sort products" style="border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;background:#fff">
-        <option value="featured">Sort: Featured</option><option value="price-asc">Price: Low to High</option>
-        <option value="price-desc">Price: High to Low</option><option value="rating">Top Rated</option><option value="newest">Newest</option>
+      <div class="sort-select"><select id="sortSel" aria-label="مرتب‌سازی محصولات" style="border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;background:#fff">
+        <option value="featured">مرتب‌سازی: پیشنهادی</option><option value="price-asc">قیمت: کم به زیاد</option>
+        <option value="price-desc">قیمت: زیاد به کم</option><option value="rating">محبوب‌ترین</option><option value="newest">جدیدترین</option>
       </select></div>
-      <div class="view-toggle" id="viewToggle"><button class="active" data-view="grid" aria-label="Grid view">▦</button><button data-view="list" aria-label="List view">☰</button></div>
+      <div class="view-toggle" id="viewToggle"><button class="active" data-view="grid" aria-label="نمایش شبکه‌ای">▦</button><button data-view="list" aria-label="نمایش فهرستی">☰</button></div>
     </div>
     <div class="products" id="shopGrid"></div>
   </div>
